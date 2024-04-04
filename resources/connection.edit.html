@@ -1,0 +1,47 @@
+<form>
+    <div class="mb-3">
+        <label for="connection-name" class="form-label">Connection name</label>
+        <input type="text" class="form-control" id="connection-name">
+    </div>
+    <div class="mb-3">
+        <label for="server-host" class="form-label">Server host</label>
+        <input type="text" class="form-control" id="server-host">
+    </div>
+    <div class="mb-3 row g-3">
+        <div class="col">
+            <label for="port-from" class="form-label">Port from</label>
+            <input type="number" class="form-control" id="port-from">
+        </div>
+        <div class="col">
+            <label for="port-to" class="form-label">Port to</label>
+            <input type="number" class="form-control" id="port-to">
+        </div>
+        <div class="col">
+            <label for="proto" class="form-label">Protocol</label>
+            <select class="form-select" id="proto">
+                <option value="tcp">TCP</option>
+                <option value="udp">UDP</option>
+                <option value="both">TCP/UDP</option>
+            </select>
+        </div>
+    </div>
+    <div class="mb-3 row g-3">
+        <div class="col">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username">
+        </div>
+        <div class="col">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col">
+            <button type="button" class="btn btn-danger" id="connection-delete">Delete</button>
+        </div>
+        <div class="col" style="text-align: right">
+            <button type="button" class="btn btn-primary" id="connection-submit">Submit</button>
+        </div>
+    </div>
+    <input type="hidden" id="connection-edit-id">
+</form>

@@ -1,0 +1,35 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+package client_service.v1;
+option go_package = "./;client_service";
+
+message RequestById {
+  int32 id = 1;
+}
+
+message Connection {
+  int32 id = 1;
+  bool is_connected = 2;
+  int64 connect_ts = 3;
+}
+
+message State {
+  repeated Connection connections = 1;
+}
+
+message JsonData {
+  bytes data = 1;
+}
+
+message Config {
+  bytes json_data = 1;
+}
+
+service Client {
+  rpc Start (RequestById) returns (State) {}
+  rpc Stop (RequestById) returns (State) {}
+  rpc GetState (google.protobuf.Empty) returns (State) {}
+  rpc StatisticStream(google.protobuf.Empty) returns(stream JsonData);
+  rpc UpdateConfig (Config) returns (google.protobuf.Empty) {}
+  rpc Shutdown (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}

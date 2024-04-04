@@ -1,0 +1,66 @@
+Logger:
+    level: info
+    timeFieldFormat: 2006-01-02T15:04:05.000000
+    prettyPrint: false
+    disableSampling: true
+    redirectStdLogger: true
+    errorStack: true
+    showCaller: false
+Runtime:
+    goMaxProcs: 0
+System:
+    shell: bash -c
+Network:
+    portMin: 1977
+    portMax: 1986
+    useTCP: false
+    useUDP: true
+    readBufferSize: 131071
+    writeBufferSize: 131071
+    multipathTCP: true
+    authenticationTimeout: 10
+    handshakeTimeout: 10
+    resetTimeout: 10
+    maxConnectionAttempts: 30
+    keepaliveTimeout: 20
+    keepaliveInterval: 2
+    keepaliveProbes: 20
+    portSelectionStrategy: random
+    compression: none
+Tunnel:
+    mtu: 1439
+    addrMin: 192.168.30.0
+    addrMax: 192.168.50.254
+    interfaceUp:
+        linux:
+            - ip addr add dev {{ .tunnel_dev }} local {{ .server_tunnel_local_ip }} remote {{ .server_tunnel_remote_ip }}
+            - ip link set dev {{ .tunnel_dev }} mtu {{ .mtu }} up
+            - ip route add {{ .client_tunnel_local_ip }}/32 via {{ .server_tunnel_local_ip }} dev {{ .tunnel_dev }}
+            - iptables -t nat -I POSTROUTING -o {{ .gateway_dev }} -s {{ .client_tunnel_local_ip }}/32 -j MASQUERADE
+    interfaceDown:
+        linux:
+            - iptables -t nat -D POSTROUTING -o {{ .gateway_dev }} -s {{ .client_tunnel_local_ip }}/32 -j MASQUERADE
+    numberOfHandlerThreads: 4
+    encryption: aes-256-ecb
+StreamMerger:
+    waitingListMaxSize: 1048576
+    waitingListMaxTTL: 60
+    streamCheckInterval: 60
+    streamTTL: 300
+Retry:
+    maxTimout: 60
+    backoffFactor: 0.5
+Acknowledgement:
+    waitingTimePercentOfRTO: 50
+    endpointLifeTime: 60
+Tracing: {}
+Profiler:
+    enabled: false
+    host: localhost
+    port: 8888
+Rest:
+    enabled: true
+    host: localhost
+    port: 8877
+Statistic:
+    interval: 1000

@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  tapir-server:
+    image: golang:1.21.0-alpine
+    build: ./
+    restart: always
+    container_name: tapir-server
+    ports:
+      - "1977-1986:1977-1986/tcp"
+      - "1977-1986:1977-1986/udp"
+      - "8877:8877/tcp"
+    networks:
+      - default
+    volumes:
+      - ./config:/config
+      - ./logs:/logs
+    devices:
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.core.somaxconn=1024
+    environment:
+      TAPIR_CONFIG: "/config/tapir-server-docker.yaml"
+
+networks:
+  default:
+    driver: bridge

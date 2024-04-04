@@ -1,0 +1,213 @@
+Logger:
+    level: info
+    timeFieldFormat: 2006-01-02T15:04:05.000000
+    prettyPrint: false
+    disableSampling: true
+    redirectStdLogger: true
+    errorStack: true
+    showCaller: false
+    fileName: ""
+    fileUID: 501
+    fileGID: 20
+Runtime:
+    goMaxProcs: 0
+System:
+    clientId: 4fa607e7-91b7-4037-b113-2de8c9ff7fc9
+    shell: bash -c
+StreamMerger:
+    waitingListMaxSize: 3145728
+    waitingListMaxTTL: 60
+    streamCheckInterval: 60
+    streamTTL: 300
+Retry:
+    maxTimout: 60
+    backoffFactor: 0.5
+Acknowledgement:
+    waitingTimePercentOfRTO: 50
+    endpointLifeTime: 60
+Connections:
+    - Name: develop-uz
+      Server:
+        host: 192.168.1.33
+        portMin: 1977
+        portMax: 1986
+        useTCP: true
+        useUDP: true
+        readBufferSize: 131071
+        writeBufferSize: 131071
+        multipathTCP: true
+        authenticationTimeout: 2
+        handshakeTimeout: 2
+        resetTimeout: 2
+        maxConnectionAttempts: 30
+        keepaliveTimeout: 20
+        keepaliveInterval: 2
+        keepaliveProbes: 20
+        portSelectionStrategy: random
+        compression: none
+        compressionLevel: 4
+      Authentication:
+        key: cjnQKqjaLaP3V2ckrXebLN6reU8VNTgB
+      User:
+        name: anton
+        password: Eqky5BVEX8Nrj9uN4c3PqBY9sfNPbnaP
+      Tunnel:
+        mtu: 1439
+        addrMin: 192.168.30.0
+        addrMax: 192.168.50.0
+        interfaceUp:
+            darwin:
+                - ifconfig {{ .tunnel_dev }} {{ .server_tunnel_local_ip }} {{ .server_tunnel_remote_ip }} mtu {{ .mtu }} up
+                - route add -net 0.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+                - route add -net 128.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+            linux:
+                - ip addr add dev {{ .tunnel_dev }} local {{ .server_tunnel_local_ip }} remote {{ .server_tunnel_remote_ip }}
+                - ip link set dev {{ .tunnel_dev }} mtu {{ .mtu }} up
+                - ip route add 0.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+                - ip route add 128.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+        interfaceDown:
+            darwin:
+                - route delete -net 0.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+                - route delete -net 128.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+            linux:
+                - ip route del 0.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+                - ip route del 128.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+        numberOfHandlerThreads: 4
+        encryption: aes-256-ecb
+    - Name: develop-ru
+      Server:
+        host: home.boykevich.ru
+        portMin: 1977
+        portMax: 1986
+        useTCP: true
+        useUDP: true
+        readBufferSize: 131071
+        writeBufferSize: 131071
+        multipathTCP: true
+        authenticationTimeout: 2
+        handshakeTimeout: 2
+        resetTimeout: 2
+        maxConnectionAttempts: 30
+        keepaliveTimeout: 20
+        keepaliveInterval: 2
+        keepaliveProbes: 20
+        portSelectionStrategy: random
+        compression: none
+        compressionLevel: 4
+      Authentication:
+        key: cjnQKqjaLaP3V2ckrXebLN6reU8VNTgB
+      User:
+        name: anton
+        password: Eqky5BVEX8Nrj9uN4c3PqBY9sfNPbnaP
+      Tunnel:
+        mtu: 1439
+        addrMin: 192.168.30.0
+        addrMax: 192.168.50.0
+        interfaceUp:
+            darwin:
+                - ifconfig {{ .tunnel_dev }} {{ .server_tunnel_local_ip }} {{ .server_tunnel_remote_ip }} mtu {{ .mtu }} up
+                - route add {{ .server_ip }} {{ .gateway_ip }}
+                - route add -net 0.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+                - route add -net 128.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+            linux:
+                - ip addr add dev {{ .tunnel_dev }} local {{ .server_tunnel_local_ip }} remote {{ .server_tunnel_remote_ip }}
+                - ip link set dev {{ .tunnel_dev }} mtu {{ .mtu }} up
+                - ip route add {{ .server_ip }}/32 via {{ .gateway_ip }}
+                - ip route add 0.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+                - ip route add 128.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+        interfaceDown:
+            darwin:
+                - route delete {{ .server_ip }} {{ .gateway_ip }}
+                - route delete -net 0.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+                - route delete -net 128.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+            linux:
+                - ip route del {{ .server_ip }}/32 via {{ .gateway_ip }}
+                - ip route del 0.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+                - ip route del 128.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+        numberOfHandlerThreads: 4
+        encryption: aes-256-ecb
+    - Name: develop-nl
+      Server:
+        host: tech2.boykevich.ru
+        portMin: 1977
+        portMax: 1986
+        useTCP: false
+        useUDP: true
+        readBufferSize: 131071
+        writeBufferSize: 131071
+        multipathTCP: true
+        authenticationTimeout: 2
+        handshakeTimeout: 2
+        resetTimeout: 2
+        maxConnectionAttempts: 30
+        keepaliveTimeout: 20
+        keepaliveInterval: 2
+        keepaliveProbes: 20
+        portSelectionStrategy: random
+        compression: none
+        compressionLevel: 4
+      Authentication:
+        key: cjnQKqjaLaP3V2ckrXebLN6reU8VNTgB
+      User:
+        name: anton
+        password: Eqky5BVEX8Nrj9uN4c3PqBY9sfNPbnaP
+      Tunnel:
+        mtu: 1439
+        addrMin: 192.168.30.0
+        addrMax: 192.168.50.0
+        interfaceUp:
+            darwin:
+                - ifconfig {{ .tunnel_dev }} {{ .server_tunnel_local_ip }} {{ .server_tunnel_remote_ip }} mtu {{ .mtu }} up
+                - route add {{ .server_ip }} {{ .gateway_ip }}
+                - route add -net 0.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+                - route add -net 128.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+            linux:
+                - ip addr add dev {{ .tunnel_dev }} local {{ .server_tunnel_local_ip }} remote {{ .server_tunnel_remote_ip }}
+                - ip link set dev {{ .tunnel_dev }} mtu {{ .mtu }} up
+                - ip route add {{ .server_ip }}/32 via {{ .gateway_ip }}
+                - ip route add 0.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+                - ip route add 128.0.0.0/1 via {{ .server_tunnel_remote_ip }}
+        interfaceDown:
+            darwin:
+                - route delete {{ .server_ip }} {{ .gateway_ip }}
+                - route delete -net 0.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+                - route delete -net 128.0.0.0 -netmask 128.0.0.0 {{ .server_tunnel_remote_ip }}
+            linux:
+                - ip route del {{ .server_ip }}/32 via {{ .gateway_ip }}
+        numberOfHandlerThreads: 4
+        encryption: aes-256-ecb
+Tracing:
+    socket: false
+    interface: false
+    streamMerger: false
+    retry: false
+    ack: false
+Profiler:
+    enabled: true
+    host: localhost
+    port: 8888
+Application:
+    homepage: resources/index.html
+    homepageWin: ../index.html
+    iconsPath: resources/icons
+    appIconLinux: app.png
+    appIconDarwin: app.icns
+    appIconWindows: app.ico
+    trayIconLinux: tray.png
+    trayIconDarwin: tray24.png
+    trayIconWindows: tray.ico
+GUI:
+    windowWidth: 1227
+    windowHeight: 984
+    windowX: 3644
+    windowY: 509
+    shutdownClientOnExit: false
+IPC:
+    grpcHost: localhost
+    grpcPort: 1977
+ClientRunner:
+    cmdLinux: pkexec {{ .client }} -config {{ .config }} &
+    cmdDarwin: osascript -e "do shell script \"{{ .client }}  -config {{ .config }} &>/dev/null &\" with administrator privileges"
+    cmdWindows: runas /noprofile /user:Administrator {{ .client }} -config {{ .config }} &
+Statistic:
+    interval: 1000

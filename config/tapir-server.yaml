@@ -1,0 +1,82 @@
+Network:
+  portMin: 1977
+  portMax: 1986
+  useTCP: false
+  useUDP: true
+  readBufferSize: 131071
+  writeBufferSize: 131071
+  multipathTCP: true
+  keepaliveTimeout: 20
+  keepaliveInterval: 2
+  keepaliveProbes: 20
+  portSelectionStrategy: random # random, hash
+
+Rest:
+  enabled: true
+  host: 0.0.0.0
+  port: 8877
+
+Tunnel:
+  mtu: 1439
+  addrMin: 192.168.30.0
+  addrMax: 192.168.50.254
+  numberOfHandlerThreads: 4
+  encryption: aes-256-ecb # none, aes-256-ecb, aes-256-gcm
+  interfaceUp:
+    linux:
+      - sysctl -w net.ipv4.ip_forward=1
+      - ip addr add dev {{ .tunnel_dev }} local {{ .server_tunnel_local_ip }} remote {{ .server_tunnel_remote_ip }}
+      - ip link set dev {{ .tunnel_dev }} mtu {{ .mtu }} up
+      - ip route add {{ .client_tunnel_local_ip }}/32 via {{ .server_tunnel_local_ip }} dev {{ .tunnel_dev }}
+      - iptables -t filter -I FORWARD -i {{ .tunnel_dev }} -o {{ .gateway_dev }} -j ACCEPT
+      - iptables -t filter -I FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+      - iptables -t nat -I POSTROUTING -o {{ .gateway_dev }} -s {{ .client_tunnel_local_ip }}/32 -j MASQUERADE
+  interfaceDown:
+    linux:
+      - iptables -t filter -D FORWARD -i {{ .tunnel_dev }} -o {{ .gateway_dev }} -j ACCEPT
+      - iptables -t filter -D FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+      - iptables -t nat -D POSTROUTING -o {{ .gateway_dev }} -s {{ .client_tunnel_local_ip }}/32 -j MASQUERADE
+
+StreamMerger:
+  threadingBy: endpoint # endpoint, session
+  waitingListMaxSize: 1048576 # bytes
+  waitingListMaxTTL: 60 # seconds
+  streamCheckInterval: 60 # seconds
+  streamTTL: 300 # seconds
+
+Retry:
+  maxTimout: 60
+  backoffFactor: 0.5
+
+Acknowledgement:
+  waitingTimePercentOfRTO: 50
+  endpointLifeTime: 60
+
+Authentication:
+  key: cjnQKqjaLaP3V2ckrXebLN6reU8VNTgB
+
+Users:
+  - name: anton
+    password: Eqky5BVEX8Nrj9uN4c3PqBY9sfNPbnaP
+  - name: firuza
+    password: Tn7CeWpVsFbPkBwdCKKjSnUuyh78sbC3
+
+Tracing:
+  socket: false
+  interface: false
+  streamMerger: false
+  retry: false
+  ack: false
+
+Logger:
+  level: info
+  fileName: ./logs/tapir-server-%D.%M.%Y %H:%N.log
+  fileUID: 1000
+  fileGID: 1000
+
+Profiler:
+  enabled: true
+  port: 8888
+
+System:
+  shell: bash -c

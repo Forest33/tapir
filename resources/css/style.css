@@ -1,0 +1,132 @@
+body {
+  position: relative;
+  _min-height: 100vh;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  overflow: hidden;
+  margin: 0;
+  flex-direction: column;
+  display: flex;
+  height: 100vh;
+  min-height: 100vh;
+}
+
+#container {
+  width: 100%;
+  max-width: 100%;
+  flex-shrink: 0;
+  position: relative;
+  padding: 15pt;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.conn {
+  flex-wrap:nowrap;
+  display: flex;
+}
+
+.conn-edit {
+  padding-top: .5rem;
+  text-align:right;
+}
+
+.conn-edit i {
+  margin-top: 0.5em;
+  padding-left: 5pt;
+  font-size: 2em;
+  color: rgb(133, 133, 133);
+}
+
+.conn-edit .btn {
+  background-color: inherit;
+  border-width: 0;
+}
+
+.conn-checkbox {
+  width: 4em !important;
+  height: 2em;
+}
+
+.conn-label {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.conn-info {
+  white-space: nowrap;
+}
+
+.conn-info .down {
+  color: #0c63e4;
+}
+
+.conn-info .up {
+  color: #198754;
+}
+
+.conn .label-info {
+  white-space: nowrap;
+}
+
+.conn .label-info .user {
+  color: #0c63e4;
+}
+
+.conn .label-name {
+  white-space: nowrap;
+}
+
+#navbar .bi {
+  font-size: 1.5em;
+  text-align: center;
+  vertical-align: -.125em;
+  fill: currentColor;
+}
+
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.right-bottom {
+  position: fixed;
+  bottom: 0;
+  right: 1.5em;
+}
+
+.connection-import {
+  font-size: 4em;
+  color: #0c63e4;
+}
+
+.journal-scroll {
+  font-size: 2em;
+  opacity: 0.5;
+  color: rgb(133, 133, 133);
+}
+
+#statistics .row {
+  margin-bottom: 1em;
+}
+
+.toast-body::first-letter {
+  text-transform: uppercase;
+}
+
+#journal .time {
+  white-space: nowrap;
+  color: rgb(62, 63, 38);
+  padding-right: 5pt;
+}
+
+#journal .error {
+  color: #dc3545;
+}
+
+#journal .row {
+  margin-bottom: 0.5em;
+}
